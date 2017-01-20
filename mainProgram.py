@@ -31,7 +31,7 @@ def main():
 	baseDir = os.environ['HOME']
 	
 	# Define Directory separator
-	commonDir = "/Study/NPA-Project/data/"
+	commonDir = "/git-repos/ipv4_pds/data/"
 	trackerDir = "tracker-data/"
 	dataDir = "gz-data/"
 	csvDir = "csv-data/"
