@@ -31,7 +31,7 @@ def createQuery(tableName):
 def truncate(dbConnection):
 	# Prep database to import files
 	print("\nTruncating Table(s).....\n", end='\n')
-	primaryTableList = ['bgp_data_primary','bgp_timestamp_primary']
+	primaryTableList = ['t_delegation_p1']
 	currentQuery = 1
 	totalQuery = len(primaryTableList)
 	# Now loop through the names and truncate the tables
