@@ -27,24 +27,9 @@ def main():
 	# Print an initialization message
 	print("\nInitializing program.....\n",end='\n')
 	
-	# Get the home directory
-	baseDir = os.environ['HOME']
-	
-	# Define Directory separator
-	commonDir = "/git-repos/ipv4_pds/data/"
-	trackerDir = "tracker-data/"
-	dataDir = "gz-data/"
-	csvDir = "csv-data/"
-	plotDir = "plotting-data/"
-	
-	# Introduce the raw data file location
-	gzFileLocation =  baseDir + commonDir + dataDir
-	csvFileLocation = baseDir + commonDir + csvDir
-	trackerFileLocation = baseDir + commonDir + trackerDir
-	
 	# Check the source directory for "xxxxyyzz.gz" files
 	# Extracts the .gz files into .csv
-	extract = fileOperations.checkFiles(gzFileLocation, csvFileLocation, trackerFileLocation)
+	extract = fileOperations.checkgzFiles()
 	
 	# Create connection to Database
 	print("\nConnecting to Databse.....", end = '\n')
@@ -53,7 +38,7 @@ def main():
 		# DB connection established
 		# Bulk insert csv files from csv file list
 		# Call executeThreads() to execute necessary threads
-		dbOperations.executeThreads(connectionString,csvFileLocation)
+		dbOperations.executeThreads(connectionString)
 	else:
 		print("Connection failed!", end = '\n')
 	gc.collect()
