@@ -10,8 +10,25 @@
 import os
 import gzip
 # -------------------------------------------------------------
+# Define some variables for file operations
+# Get the home directory
+fullPath = os.path.abspath(__file__)
+baseDir, fileName = os.path.split(fullPath)
+
+# Define Directory separator
+commonDir = "/data/"
+trackerDir = "tracker-data/"
+dataDir = "gz-data/"
+csvDir = "csv-data/"
+plotDir = "plotting-data/"
+
+# Introduce the raw data file location
+gzFileLocation =  baseDir + commonDir + dataDir
+csvFileLocation = baseDir + commonDir + csvDir
+trackerFileLocation = baseDir + commonDir + trackerDir
+
 # Define a function to extract the files
-def extractFiles(gzFileLocation,fList, csvFileLocation, trackerFileLocation):
+def extractgzFiles(fList):
 	gzTrackerFile = trackerFileLocation + 'gz-Tracker.txt'
 	for f in fList:
 		filePath = gzFileLocation + f
@@ -37,29 +54,60 @@ def extractFiles(gzFileLocation,fList, csvFileLocation, trackerFileLocation):
 			print('------------------------', end = '\n')
 		else:
 			pass
-# Define checkFiles() function to detemine whether file exists
+# Define checkgzFiles() function to detemine whether new file exists
 # or not if so then return the names in a list
-def checkFiles(gzFileLocation, csvFileLocation, trackerFileLocation):
+def checkgzFiles():
 	# List 'xxxxyyzz.gz' files
 	if os.listdir(gzFileLocation):
-		fList = os.listdir(gzFileLocation)
+		fList = [f for f in os.listdir(gzFileLocation) if f.endswith('.gz')]
 		# Check against gz-file tracker is there any new files
 		try:
 			gzTrackerFile = trackerFileLocation + 'gz-Tracker.txt'
 			with open(gzTrackerFile,'r') as gzTracker:
 				oldgzFiles = gzTracker.read().splitlines()
-				#print ('{}'.format(oldgzFiles), end = '\n')
 		except:
 			print('gz data tracker file not found!', end = '\n')
 		# Compare two lists of files to find out the newly added file
 		gzFileSet = set(oldgzFiles)
 		newgzFiles = [x for x in fList if x not in gzFileSet]
 		if newgzFiles:
-			extractFiles(gzFileLocation, newgzFiles, csvFileLocation, trackerFileLocation)
+			extractgzFiles(newgzFiles)
 		else:
 			print('No new gz data file detected!', end = '\n')
 	else:
 		print("Data directory [{}] is empty!".format(gzFileLocation), end = '\n')
+# Define csvCheck() function to detemine whether new file exists
+# or not if so then return the names in a list
+def csvCheck():
+	# Check for new csv file and return a list of new csv files
+	if os.listdir(csvFileLocation):
+		fList = [f for f in os.listdir(csvFileLocation) if f.endswith('.csv')]
+		# Check against gz-file tracker is there any new files
+		try:
+			csvTrackerFile = trackerFileLocation + 'csv-Tracker.txt'
+			with open(csvTrackerFile,'r') as csvTracker:
+				oldcsvFiles = csvTracker.read().splitlines()
+		except:
+			print('csv data tracker file not found!', end = '\n')
+		# Compare two lists of files to find out the newly added file
+		csvFileSet = set(oldcsvFiles)
+		csvList = [x for x in fList if x not in csvFileSet]
+		if csvList:
+			return csvList
+		else:
+			print('\nNo new csv data file detected!', end = '\n')
+	else:
+		print("Data directory [{}] is empty!".format(csvFileLocation), end = '\n')
+# define csvLogging() to log csv input to database
+def csvLogging(csvList):
+	# write the log file
+	for f in csvList:
+		try:
+			csvTrackerFile = trackerFileLocation + 'csv-Tracker.txt'
+			with open (csvTrackerFile, 'a+') as csvTracker:
+				csvTracker.write(f+'\n')
+		except:
+			print('can\'t write csv log in csv tracker file!', end = '\n')
 # -------------------------------------------------------------
 # This is a standard boilerplate that calls the main() function
 if __name__ == '__main__':
