@@ -11,17 +11,15 @@ import os
 import gc
 # Import custom library functions
 import primaryTableCleaner
+import fileOperations
 # Define a function to execute import query
 def executeQuery(connection,inputDirectory,inputFile):
 	# Prepare a cursor object using cursor() method
 	cursor = connection.cursor()
 	# Create MYSQL database query string according to file name
 	dbQuery = createQuery(inputDirectory,inputFile)
-	fileName, extension = inputFile.split('.')
-	insertTimestampQuery = 'INSERT INTO bgp_timestamp_primary (file_date) VALUES (' + fileName +')'
 	# Execute SQL query using execute() method
 	try:
-		cursor.execute(insertTimestampQuery)
 		cursor.execute(dbQuery)
 		print("[ {} ] file imported successfully".format(inputFile), end='\n')
 	except ValueError as e:
@@ -32,7 +30,7 @@ def executeQuery(connection,inputDirectory,inputFile):
 	cursor.close();
 # Define a function to create SQL query
 def createQuery(inputDirectory,inputFile):
-	tableName = 'bgp_data_primary'
+	tableName = 't_delegation_p1'
 	querySegment_1 = "LOAD DATA LOCAL INFILE '"
 	querySegment_2 = inputDirectory + inputFile + "'"
 	querySegment_3 = " INTO TABLE " + tableName
@@ -70,29 +68,38 @@ def createTransferQuery(item):
 	#print(completeQuery, end='\n')
 	return completeQuery	
 # Create a function that will insert the data to the database
-def csvImport(dbConnection,inputDirectory):
-	# Create an empty list that will store csv file names
-	inputFileList = []
-	for file in os.listdir(inputDirectory):
-		if file.endswith('.csv'):
-			inputFileList.append(file)
-	# Get the list of the csv and insert
-	scrcNdstList = [['view_historical_data', 'historical_data'],['view_bgp_data', 'bgp_data']]
-	currentQueryCount = 1
-	totalQueryCount = len(inputFileList)
-	print("\nImporting CSV files to DB.....\n", end='\n')
-	# Call a function that will import CSV to database
-	for fileName in inputFileList:
-		# Print executing query message
-		print("[ {} of {} ] -> ".format(currentQueryCount,totalQueryCount), end='')
-		executeQuery(dbConnection,inputDirectory,fileName)
-		# Transfer data from view to table
-		for item in scrcNdstList:
-			transferData(dbConnection,item)
-		# Clean the Primary Tables to insert data
-		primaryTableCleaner.truncate(dbConnection)
-		currentQueryCount += 1
-	gc.collect()
+def csvImport(dbConnection):
+	# Create empty list that will store csv file names, and logs
+	csvList = []
+	csvLog = []
+	inputDirectory = fileOperations.csvFileLocation
+	for f in os.listdir(inputDirectory):
+		if f.endswith('.csv'):
+			csvList.append(f)
+	# check and match csv files for new files
+	inputFileList = fileOperations.csvCheck()
+	if inputFileList:
+		# Get the list of the csv and insert
+		scrcNdstList = [['v_historical', 't_historical_s1'],['v_delegation', 't_delegation_s1']]
+		currentQueryCount = 1
+		totalQueryCount = len(inputFileList)
+		print("\nImporting CSV files to DB.....\n", end='\n')
+		# Call a function that will import CSV to database
+		for fileName in inputFileList:
+			# Print executing query message
+			print("[ {} of {} ] -> ".format(currentQueryCount,totalQueryCount), end='')
+			executeQuery(dbConnection,inputDirectory,fileName)
+			# Transfer data from view to table
+			for item in scrcNdstList:
+				transferData(dbConnection,item)
+			# Clean the Primary Tables to insert data
+			primaryTableCleaner.truncate(dbConnection)
+			csvLog.append(fileName)
+			currentQueryCount += 1
+		# write the log file
+		print("Writing csv log...", end = '\n')
+		fileOperations.csvLogging(csvLog)
+		gc.collect()
 # -------------------------------------------------------------
 # This is a standard boilerplate that calls the main() function
 if __name__ == '__main__':
