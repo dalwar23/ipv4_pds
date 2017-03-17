@@ -34,6 +34,19 @@ CREATE TABLE IF NOT EXISTS `t_business_rel_s1` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='Business relation between as by its number (X=no_rel, -1=c2p, 0=p2p, 1=p2c)';
 
 -- Data exporting was unselected.
+-- Dumping structure for table bgp_data.t_current_delegation_s1
+CREATE TABLE IF NOT EXISTS `t_current_delegation_s1` (
+  `time_stamp` date DEFAULT NULL,
+  `prefix_less` varchar(25) DEFAULT NULL,
+  `pl_usable_addresses` int(11) DEFAULT NULL,
+  `prefix_more` varchar(25) DEFAULT NULL,
+  `pm_usable_addresses` int(11) DEFAULT NULL,
+  `delegator` int(11) DEFAULT NULL,
+  `delegatee` int(11) DEFAULT NULL,
+  `c_type` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='Storage bgp current timestamp delegation data';
+
+-- Data exporting was unselected.
 -- Dumping structure for table bgp_data.t_delegation_p1
 CREATE TABLE IF NOT EXISTS `t_delegation_p1` (
   `time_stamp` date DEFAULT NULL,
