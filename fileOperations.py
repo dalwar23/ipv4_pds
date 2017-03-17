@@ -8,6 +8,7 @@
 # -------------------------------------------------------------
 # Import Built-in Libraries
 import os
+from os.path import expanduser
 import gzip
 # -------------------------------------------------------------
 # Define some variables for file operations
@@ -15,10 +16,14 @@ import gzip
 fullPath = os.path.abspath(__file__)
 baseDir, fileName = os.path.split(fullPath)
 
+# Get home directory
+homeDir = expanduser('~')
+
 # Define Directory separator
 commonDir = "/data/"
 trackerDir = "tracker-data/"
-dataDir = "gz-data/"
+#dataDir = "gz-data/" # uncomment this line if .gz data is taken from data/gz-data directory
+dataDir = "/out/delegations/"
 csvDir = "csv-data/"
 plotDir = "plotting-data/"
 
