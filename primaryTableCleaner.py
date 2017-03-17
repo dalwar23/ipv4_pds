@@ -28,10 +28,15 @@ def createQuery(tableName):
 	querySegment_2 = tableName
 	completeQuery = querySegment_1 + querySegment_2
 	return completeQuery
-def truncate(dbConnection):
+def truncate(dbConnection, flag):
 	# Prep database to import files
 	print("\nTruncating Table(s).....\n", end='\n')
-	primaryTableList = ['t_delegation_p1']
+	if(flag==1):
+		primaryTableList = ['t_delegation_p1', 't_current_delegation_s1']
+	elif(flag==2):
+		primaryTableList = ['t_current_delegation_s1']
+	else:
+		primaryTableList = ['t_delegation_p1']
 	currentQuery = 1
 	totalQuery = len(primaryTableList)
 	# Now loop through the names and truncate the tables

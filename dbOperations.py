@@ -12,7 +12,7 @@ import importCsv2Db
 # Create a function to execute the threads
 def executeThreads(dbConnection):
 	# Clean the Primary Tables to insert data
-	primaryTableCleaner.truncate(dbConnection)
+	primaryTableCleaner.truncate(dbConnection, flag=1)
 	# Insert data from file to database
 	importCsv2Db.csvImport(dbConnection)
 # -------------------------------------------------------------

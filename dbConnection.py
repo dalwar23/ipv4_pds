@@ -8,28 +8,29 @@
 # -------------------------------------------------------------
 # Import addin Libraries
 import mysql.connector as pymysql
+#import pymysql
 # -------------------------------------------------------------
 # Define a connect() function
 def connect():
 	# Database Login Credentials
 	dbHost = 'localhost' # Change (localhost to <ip address> if necessary)
-	port = '3306'	# Please don't change port value unless your server dictates
+	port = 3306	# Please don't change port value unless your server dictates
 	userName = 'root' # Use database user name here
 	passWord = 'inetnpa' # use  database password here
 	databaseName = 'bgp_data' # use database name here
 
 	# try to connect to database
 	try:
-		connection = pymysql.connect(user = userName, password=passWord, host = dbHost, database = databaseName)
+		connection = pymysql.connect(user = userName, password = passWord, host = dbHost, database = databaseName)
 	except:
 		connection = False
 
 	# Connection message
 	if connection:
-		print("Connected to [ {} ] database".format(databaseName), end='\n')
+		print("Connected to [ {}:{} -> {} ] database".format(dbHost,port,databaseName), end='\n')
 		return connection
 	else:
-		print("Unable to connect to [ {} ] database".format(databaseName), end='\n')
+		print("Unable to connect to [ {}:{} -> {} ] database".format(dbHost,port,databaseName), end='\n')
 # --------------------------------------------------------------
 # This is a standard boilerplate that calls the main() function
 if __name__ == '__main__':

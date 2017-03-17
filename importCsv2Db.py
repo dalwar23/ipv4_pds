@@ -80,7 +80,8 @@ def csvImport(dbConnection):
 	inputFileList = fileOperations.csvCheck()
 	if inputFileList:
 		# Get the list of the csv and insert
-		scrcNdstList = [['v_historical', 't_historical_s1'],['v_delegation', 't_delegation_s1']]
+		srcNdstList = [['v_historical', 't_historical_s1'],['v_delegation', 't_delegation_s1'],['v_delegation', 't_current_delegation_s1']]
+		cSrcNdstList = [['v_delegation', 't_current_delegation_s1']]
 		currentQueryCount = 1
 		totalQueryCount = len(inputFileList)
 		print("\nImporting CSV files to DB.....\n", end='\n')
@@ -90,10 +91,16 @@ def csvImport(dbConnection):
 			print("[ {} of {} ] -> ".format(currentQueryCount,totalQueryCount), end='')
 			executeQuery(dbConnection,inputDirectory,fileName)
 			# Transfer data from view to table
-			for item in scrcNdstList:
-				transferData(dbConnection,item)
+			if(fileName.endswith('01.csv')):
+				for item in srcNdstList:
+					transferData(dbConnection,item)
+			else:
+				# Clean the Primary Tables to insert data
+				primaryTableCleaner.truncate(dbConnection, flag=2)
+				for item in cSrcNdstList:
+					transferData(dbConnection,item)
 			# Clean the Primary Tables to insert data
-			primaryTableCleaner.truncate(dbConnection)
+			primaryTableCleaner.truncate(dbConnection, flag=0)
 			csvLog.append(fileName)
 			currentQueryCount += 1
 		# write the log file
