@@ -1,4 +1,5 @@
 *.csv
 *.gz
+*.txt
 data/**/*
 __pycache__/**/*
