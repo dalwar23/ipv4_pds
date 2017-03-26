@@ -28,7 +28,8 @@ csvDir = "csv-data/"
 plotDir = "plotting-data/"
 
 # Introduce the raw data file location
-gzFileLocation =  baseDir + commonDir + dataDir
+#gzFileLocation =  baseDir + commonDir + dataDir
+gzFileLocation =  homeDir + dataDir
 csvFileLocation = baseDir + commonDir + csvDir
 trackerFileLocation = baseDir + commonDir + trackerDir
 
