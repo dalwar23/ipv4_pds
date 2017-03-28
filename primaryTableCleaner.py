@@ -31,10 +31,9 @@ def createQuery(tableName):
 def truncate(dbConnection, flag):
 	# Prep database to import files
 	print("\nTruncating Table(s).....\n", end='\n')
+	# Truncate tables based on flag's value
 	if(flag==1):
 		primaryTableList = ['t_delegation_p1', 't_current_delegation_s1']
-	elif(flag==2):
-		primaryTableList = ['t_current_delegation_s1']
 	else:
 		primaryTableList = ['t_delegation_p1']
 	currentQuery = 1

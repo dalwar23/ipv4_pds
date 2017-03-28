@@ -13,7 +13,6 @@ import time
 import gc
 # Import custom library fucntions
 import fileOperations
-import dbConnection
 import dbOperations
 # ---------------------------------------------------------------
 # This function is the main function - that calls other necessary
@@ -23,25 +22,17 @@ def main():
 	program_start_time = time.time()
 	human_readable_time = time.strftime("%H:%M:%S", time.localtime(program_start_time))
 	print("\nProgram clock started at -> [ {} ]".format(str(human_readable_time)),end='\n')
-	
+
 	# Print an initialization message
 	print("\nInitializing program.....\n",end='\n')
-	
+
 	# Check the source directory for "xxxxyyzz.gz" files
 	# Extracts the .gz files into .csv
-	extract = fileOperations.checkgzFiles()
-	
-	# Create connection to Database
-	print("\nConnecting to Databse.....", end = '\n')
-	connectionString = dbConnection.connect()
-	if connectionString:
-		# DB connection established
-		# Bulk insert csv files from csv file list
-		# Call executeThreads() to execute necessary threads
-		dbOperations.executeThreads(connectionString)
-	else:
-		print("Connection failed!", end = '\n')
-	gc.collect()
+	fileOperations.checkgzFiles()
+
+	# Create DB connection and execute threads on DB
+	dbOperations.executeThreads()
+
 	# Print program execution time message
 	program_elapsed_sec = (time.time() - program_start_time)
 	#program_elapsed_min = round((program_elapsed_sec / 60),2)

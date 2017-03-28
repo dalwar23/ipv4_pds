@@ -7,14 +7,19 @@
 # mysql Connector Version: 2.1.5
 # -------------------------------------------------------------
 # Import custom library functions
-import primaryTableCleaner
 import importCsv2Db
+import dbConnection
 # Create a function to execute the threads
-def executeThreads(dbConnection):
-	# Clean the Primary Tables to insert data
-	primaryTableCleaner.truncate(dbConnection, flag=1)
-	# Insert data from file to database
-	importCsv2Db.csvImport(dbConnection)
+def executeThreads():
+	# Create connection to Database
+	print("\nConnecting to Databse.....", end = '\n')
+	dbConnection = dbConnection.connect()
+	if dbConnection:
+		# Insert data from file to database
+		importCsv2Db.csvImport(dbConnection)
+	else:
+		print("Connection failed!", end = '\n')
+	gc.collect()
 # -------------------------------------------------------------
 # This is a standard boilerplate that calls the main() function
 if __name__ == '__main__':
