@@ -27,7 +27,7 @@ def connect():
 
 	# Connection message
 	if connection:
-		print("Connected to [ {}:{} -> {} ] database".format(dbHost,port,databaseName), end='\n')
+		# print("Connected to [ {}:{} -> {} ] database".format(dbHost,port,databaseName), end='\n')
 		return connection
 	else:
 		print("Unable to connect to [ {}:{} -> {} ] database".format(dbHost,port,databaseName), end='\n')

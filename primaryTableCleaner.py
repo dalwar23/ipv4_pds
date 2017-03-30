@@ -30,12 +30,12 @@ def createQuery(tableName):
 	return completeQuery
 def truncate(dbConnection, flag):
 	# Prep database to import files
-	print("\nTruncating Table(s).....\n", end='\n')
+	print("\nTruncating Table(s).....", end='\n')
 	# Truncate tables based on flag's value
 	if(flag==1):
-		primaryTableList = ['t_delegation_p1', 't_current_delegation_s1']
+		primaryTableList = ['t_delegation_p1', 't_current_delegation_s1', 't_delegation_p2']
 	else:
-		primaryTableList = ['t_delegation_p1']
+		primaryTableList = ['t_delegation_p1', 't_delegation_p2']
 	currentQuery = 1
 	totalQuery = len(primaryTableList)
 	# Now loop through the names and truncate the tables
@@ -45,7 +45,7 @@ def truncate(dbConnection, flag):
 		# Call a function that will clean all selected tables
 		tblClnr(dbConnection,tableName)
 		currentQuery += 1
-	print ("\nAll listed table(s) truncated", end='\n')
+	print ("All listed table(s) truncated", end='\n')
 # -------------------------------------------------------------
 # This is a standard boilerplate that calls the main() function
 if __name__ == '__main__':

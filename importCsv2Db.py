@@ -37,7 +37,7 @@ def createImportQuery(inputDirectory,inputFile):
 	querySegment_3 = " INTO TABLE " + tableName
 	querySegment_4 = """ FIELDS TERMINATED BY '|' """ # OPTIONALLY ENCLOSED BY '"' ESCAPED BY '"' LINES TERMINATED BY '\\n' """
 	# Now complete query by joining all the segments togather
-	completeQuery = querySegment_1 + querySegment_2 + querySegment_3 + querySegment_4 #+ querySegment_5 + querySegment_6
+	completeImportQuery = querySegment_1 + querySegment_2 + querySegment_3 + querySegment_4 #+ querySegment_5 + querySegment_6
 	# return complete query
 	return completeImportQuery
 # Create a function that will insert the data to the database
@@ -52,11 +52,9 @@ def csvImport(dbConnection):
 	# check and match csv files for new files
 	inputFileList = fileOperations.csvCheck()
 	if inputFileList:
-		# Clean the Primary Tables to insert data
-		primaryTableCleaner.truncate(dbConnection, flag=1)
 		# Create list of tables for data transfer
-		srcNdstList = [['v_historical', 't_historical_s1'],['v_delegation', 't_delegation_s1'],['v_delegation', 't_current_delegation_s1']]
-		cSrcNdstList = [['v_delegation', 't_current_delegation_s1']]
+		srcNdstList = [['v_historical', 't_historical_s1'],['t_delegation_p2', 't_delegation_s1'],['v_delegation_2', 't_current_delegation_s1']]
+		cSrcNdstList = [['v_delegation_2', 't_current_delegation_s1']]
 		table2Update = 't_delegation_p2'
 		# Create query count
 		currentQueryCount = 1
@@ -64,20 +62,21 @@ def csvImport(dbConnection):
 		print("\nImporting CSV files to DB.....\n", end='\n')
 		# Call a function that will import CSV to database
 		for fileName in inputFileList:
+			# Clean the Primary Tables to insert data
+			primaryTableCleaner.truncate(dbConnection, flag=1)
 			# Print executing query message
-			print("[ {} of {} ] -> ".format(currentQueryCount,totalQueryCount), end='')
+			print("\n[ {} of {} ] -> ".format(currentQueryCount,totalQueryCount), end='')
 			# Import csv file to primary table
 			executeImportQuery(dbConnection, inputDirectory, fileName)
 			# Transfer data from view to table
 			if(fileName.endswith('01.csv')):
 				# Transfer data to a second table and update it
-				print("\n Updating business relationship.....\n", end='\n')
-				tableOperations.executeUpdate(dbConnection, table2Update)
+				tableOperations.executeUpdate(table2Update)
 				for item in srcNdstList:
-					tableOperations.transferData(dbConnection,item)
+					tableOperations.transferData(item)
 			else:
 				for item in cSrcNdstList:
-					tableOperations.transferData(dbConnection,item)
+					tableOperations.transferData(item)
 			# Clean the Primary Tables to insert data
 			primaryTableCleaner.truncate(dbConnection, flag=0)
 			csvLog.append(fileName)
