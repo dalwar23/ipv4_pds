@@ -1,8 +1,8 @@
 # ipv4_pds
 IPv4 prefix delegation structure
 # Known Dependencies
-python 3.4
-mysql connector for python 2.14/2.15
+> python 3.4
+> mysql connector for python 2.14/2.15
 # Instructions on how to use bgp data processing tool
 # Step 1
 Download/Fork/Clone repository. Under mysql-scripts folder "bgp_data.sql" file is the database schema.
@@ -20,3 +20,4 @@ Run mainProgram.py with command "python3 mainProgram.py"
 
 # Use the processing tool for IPv6
 > Make sure business relation data, meta data, and all delegation data has same number of columns and the delemitar is the same as ipv4. In this case "|". 
+> Make sure folder structure remains the same and Database field length is changed accoedingly inside the table structure.
