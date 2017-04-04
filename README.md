@@ -21,7 +21,10 @@ Load business and meta data into *"t_business_rel_p1"* and *"t_meta_data_s1"* us
 ### Step 4
 Make sure all the dependecies are met.
 ### Step 5
-Run mainProgram.py with command "python3 mainProgram.py"
+Run **mainProgram.py** with command 
+```python
+python3 mainProgram.py
+```
 
 # Use the processing tool for IPv6
 > Make sure business relation data, meta data, and all delegation data has same number of columns and the delemitar is the same as ipv4. In this case "|". 
