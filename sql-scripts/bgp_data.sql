@@ -18,6 +18,7 @@ CREATE DATABASE IF NOT EXISTS `bgp_data` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `bgp_data`;
 
 -- Dumping structure for table bgp_data.t_business_rel_p1
+DROP TABLE IF EXISTS `t_business_rel_p1`;
 CREATE TABLE IF NOT EXISTS `t_business_rel_p1` (
   `as_1` int(11) DEFAULT NULL,
   `as_2` int(11) DEFAULT NULL,
@@ -26,6 +27,7 @@ CREATE TABLE IF NOT EXISTS `t_business_rel_p1` (
 
 -- Data exporting was unselected.
 -- Dumping structure for table bgp_data.t_business_rel_s1
+DROP TABLE IF EXISTS `t_business_rel_s1`;
 CREATE TABLE IF NOT EXISTS `t_business_rel_s1` (
   `as_1` int(11) DEFAULT NULL,
   `as_2` int(11) DEFAULT NULL,
@@ -35,12 +37,11 @@ CREATE TABLE IF NOT EXISTS `t_business_rel_s1` (
 
 -- Data exporting was unselected.
 -- Dumping structure for table bgp_data.t_current_delegation_s1
+DROP TABLE IF EXISTS `t_current_delegation_s1`;
 CREATE TABLE IF NOT EXISTS `t_current_delegation_s1` (
   `time_stamp` date DEFAULT NULL,
   `prefix_less` varchar(25) DEFAULT NULL,
-  `pl_usable_addresses` int(11) DEFAULT NULL,
   `prefix_more` varchar(25) DEFAULT NULL,
-  `pm_usable_addresses` int(11) DEFAULT NULL,
   `delegator` int(11) DEFAULT NULL,
   `delegatee` int(11) DEFAULT NULL,
   `c_type` int(11) DEFAULT NULL
@@ -48,6 +49,7 @@ CREATE TABLE IF NOT EXISTS `t_current_delegation_s1` (
 
 -- Data exporting was unselected.
 -- Dumping structure for table bgp_data.t_delegation_p1
+DROP TABLE IF EXISTS `t_delegation_p1`;
 CREATE TABLE IF NOT EXISTS `t_delegation_p1` (
   `time_stamp` date DEFAULT NULL,
   `prefix_less` varchar(25) DEFAULT NULL,
@@ -58,20 +60,34 @@ CREATE TABLE IF NOT EXISTS `t_delegation_p1` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Primary container for bgp delegation data from the servers';
 
 -- Data exporting was unselected.
+-- Dumping structure for table bgp_data.t_delegation_p2
+DROP TABLE IF EXISTS `t_delegation_p2`;
+CREATE TABLE IF NOT EXISTS `t_delegation_p2` (
+  `time_stamp` date DEFAULT NULL,
+  `prefix_less` varchar(25) DEFAULT NULL,
+  `prefix_more` varchar(25) DEFAULT NULL,
+  `delegator` int(11) DEFAULT NULL,
+  `delegatee` int(11) DEFAULT NULL,
+  `c_type` int(11) DEFAULT NULL,
+  `as_rel` varchar(25) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='Storage bgp delegation data';
+
+-- Data exporting was unselected.
 -- Dumping structure for table bgp_data.t_delegation_s1
+DROP TABLE IF EXISTS `t_delegation_s1`;
 CREATE TABLE IF NOT EXISTS `t_delegation_s1` (
   `time_stamp` date DEFAULT NULL,
   `prefix_less` varchar(25) DEFAULT NULL,
-  `pl_usable_addresses` int(11) DEFAULT NULL,
   `prefix_more` varchar(25) DEFAULT NULL,
-  `pm_usable_addresses` int(11) DEFAULT NULL,
   `delegator` int(11) DEFAULT NULL,
   `delegatee` int(11) DEFAULT NULL,
-  `c_type` int(11) DEFAULT NULL
+  `c_type` int(11) DEFAULT NULL,
+  `as_rel` varchar(25) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Storage bgp delegation data';
 
 -- Data exporting was unselected.
 -- Dumping structure for table bgp_data.t_historical_s1
+DROP TABLE IF EXISTS `t_historical_s1`;
 CREATE TABLE IF NOT EXISTS `t_historical_s1` (
   `time_stamp` date DEFAULT NULL,
   `total_prefixes` int(11) DEFAULT NULL,
@@ -83,6 +99,7 @@ CREATE TABLE IF NOT EXISTS `t_historical_s1` (
 
 -- Data exporting was unselected.
 -- Dumping structure for table bgp_data.t_meta_data_s1
+DROP TABLE IF EXISTS `t_meta_data_s1`;
 CREATE TABLE IF NOT EXISTS `t_meta_data_s1` (
   `as_num` int(11) DEFAULT NULL,
   `conesize` int(11) DEFAULT NULL,
@@ -93,6 +110,7 @@ CREATE TABLE IF NOT EXISTS `t_meta_data_s1` (
 
 -- Data exporting was unselected.
 -- Dumping structure for view bgp_data.v_business_rel
+DROP VIEW IF EXISTS `v_business_rel`;
 -- Creating temporary table to overcome VIEW dependency errors
 CREATE TABLE `v_business_rel` (
 	`as_1` INT(11) NULL,
@@ -101,20 +119,56 @@ CREATE TABLE `v_business_rel` (
 	`as_rel_type` VARCHAR(11) NULL COLLATE 'utf8mb4_general_ci'
 ) ENGINE=MyISAM;
 
+-- Dumping structure for view bgp_data.v_business_rel_2
+DROP VIEW IF EXISTS `v_business_rel_2`;
+-- Creating temporary table to overcome VIEW dependency errors
+CREATE TABLE `v_business_rel_2` (
+	`as_1` INT(11) NULL,
+	`as_2` INT(11) NULL,
+	`as_rel` INT(1) NOT NULL,
+	`as_rel_type` VARCHAR(3) NOT NULL COLLATE 'utf8mb4_general_ci'
+) ENGINE=MyISAM;
+
+-- Dumping structure for view bgp_data.v_current_prefix
+DROP VIEW IF EXISTS `v_current_prefix`;
+-- Creating temporary table to overcome VIEW dependency errors
+CREATE TABLE `v_current_prefix` (
+	`time_stamp` DATE NULL,
+	`prefix_less` VARCHAR(25) NULL COLLATE 'utf8_general_ci',
+	`prefix_more` VARCHAR(25) NULL COLLATE 'utf8_general_ci',
+	`delegator` INT(11) NULL,
+	`delegatee` INT(11) NULL,
+	`c_type` INT(11) NULL,
+	`as_rel` VARCHAR(25) NULL COLLATE 'utf8_general_ci'
+) ENGINE=MyISAM;
+
 -- Dumping structure for view bgp_data.v_delegation
+DROP VIEW IF EXISTS `v_delegation`;
 -- Creating temporary table to overcome VIEW dependency errors
 CREATE TABLE `v_delegation` (
 	`time_stamp` DATE NULL,
 	`prefix_less` VARCHAR(25) NULL COLLATE 'utf8_general_ci',
-	`pl_usable_addresses` DOUBLE NULL,
 	`prefix_more` VARCHAR(25) NULL COLLATE 'utf8_general_ci',
-	`pm_usable_addresses` DOUBLE NULL,
+	`delegator` INT(11) NULL,
+	`delegatee` INT(11) NULL,
+	`c_type` INT(11) NULL,
+	`as_rel` BINARY(0) NULL
+) ENGINE=MyISAM;
+
+-- Dumping structure for view bgp_data.v_delegation_2
+DROP VIEW IF EXISTS `v_delegation_2`;
+-- Creating temporary table to overcome VIEW dependency errors
+CREATE TABLE `v_delegation_2` (
+	`time_stamp` DATE NULL,
+	`prefix_less` VARCHAR(25) NULL COLLATE 'utf8_general_ci',
+	`prefix_more` VARCHAR(25) NULL COLLATE 'utf8_general_ci',
 	`delegator` INT(11) NULL,
 	`delegatee` INT(11) NULL,
 	`c_type` INT(11) NULL
 ) ENGINE=MyISAM;
 
 -- Dumping structure for view bgp_data.v_historical
+DROP VIEW IF EXISTS `v_historical`;
 -- Creating temporary table to overcome VIEW dependency errors
 CREATE TABLE `v_historical` (
 	`dates` DATE NULL,
@@ -126,16 +180,37 @@ CREATE TABLE `v_historical` (
 ) ENGINE=MyISAM;
 
 -- Dumping structure for view bgp_data.v_business_rel
+DROP VIEW IF EXISTS `v_business_rel`;
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `v_business_rel`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_business_rel` AS select `t_business_rel_p1`.`as_1` AS `as_1`,`t_business_rel_p1`.`as_2` AS `as_2`,`t_business_rel_p1`.`as_rel` AS `as_rel`,(case `t_business_rel_p1`.`as_rel` when 0 then 'p2p' when 1 then 'p2c' when -(1) then 'c2p' when 'x' then 'no-relation' when 'X' then 'no-relation' else 'undifined' end) AS `as_rel_type` from `t_business_rel_p1`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_business_rel` AS select `t_business_rel_p1`.`as_1` AS `as_1`,`t_business_rel_p1`.`as_2` AS `as_2`,`t_business_rel_p1`.`as_rel` AS `as_rel`,(case `t_business_rel_p1`.`as_rel` when 0 then 'p2p' when -(1) then 'p2c' when 'x' then 'no-relation' when 'X' then 'no-relation' else 'undifined' end) AS `as_rel_type` from `t_business_rel_p1`;
+
+-- Dumping structure for view bgp_data.v_business_rel_2
+DROP VIEW IF EXISTS `v_business_rel_2`;
+-- Removing temporary table and create final VIEW structure
+DROP TABLE IF EXISTS `v_business_rel_2`;
+CREATE ALGORITHM=TEMPTABLE DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_business_rel_2` AS select `t_business_rel_p1`.`as_2` AS `as_1`,`t_business_rel_p1`.`as_1` AS `as_2`,1 AS `as_rel`,'c2p' AS `as_rel_type` from `t_business_rel_p1` where (`t_business_rel_p1`.`as_rel` = -(1));
+
+-- Dumping structure for view bgp_data.v_current_prefix
+DROP VIEW IF EXISTS `v_current_prefix`;
+-- Removing temporary table and create final VIEW structure
+DROP TABLE IF EXISTS `v_current_prefix`;
+CREATE ALGORITHM=TEMPTABLE DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_current_prefix` AS select `t_delegation_s1`.`time_stamp` AS `time_stamp`,`t_delegation_s1`.`prefix_less` AS `prefix_less`,`t_delegation_s1`.`prefix_more` AS `prefix_more`,`t_delegation_s1`.`delegator` AS `delegator`,`t_delegation_s1`.`delegatee` AS `delegatee`,`t_delegation_s1`.`c_type` AS `c_type`,`t_delegation_s1`.`as_rel` AS `as_rel` from `t_delegation_s1` where (`t_delegation_s1`.`time_stamp` = (select max(`t_delegation_s1`.`time_stamp`) AS `current_time_stamp` from `t_delegation_s1`));
 
 -- Dumping structure for view bgp_data.v_delegation
+DROP VIEW IF EXISTS `v_delegation`;
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `v_delegation`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_delegation` AS select `t_delegation_p1`.`time_stamp` AS `time_stamp`,`t_delegation_p1`.`prefix_less` AS `prefix_less`,pow(2,(32 - cast(substring_index(`t_delegation_p1`.`prefix_less`,'/',-(1)) as unsigned))) AS `pl_usable_addresses`,`t_delegation_p1`.`prefix_more` AS `prefix_more`,pow(2,(32 - cast(substring_index(`t_delegation_p1`.`prefix_more`,'/',-(1)) as unsigned))) AS `pm_usable_addresses`,`t_delegation_p1`.`delegator` AS `delegator`,`t_delegation_p1`.`delegatee` AS `delegatee`,`t_delegation_p1`.`c_type` AS `c_type` from `t_delegation_p1`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_delegation` AS select `t_delegation_p1`.`time_stamp` AS `time_stamp`,`t_delegation_p1`.`prefix_less` AS `prefix_less`,`t_delegation_p1`.`prefix_more` AS `prefix_more`,`t_delegation_p1`.`delegator` AS `delegator`,`t_delegation_p1`.`delegatee` AS `delegatee`,`t_delegation_p1`.`c_type` AS `c_type`,NULL AS `as_rel` from `t_delegation_p1`;
+
+-- Dumping structure for view bgp_data.v_delegation_2
+DROP VIEW IF EXISTS `v_delegation_2`;
+-- Removing temporary table and create final VIEW structure
+DROP TABLE IF EXISTS `v_delegation_2`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_delegation_2` AS select `t_delegation_p1`.`time_stamp` AS `time_stamp`,`t_delegation_p1`.`prefix_less` AS `prefix_less`,`t_delegation_p1`.`prefix_more` AS `prefix_more`,`t_delegation_p1`.`delegator` AS `delegator`,`t_delegation_p1`.`delegatee` AS `delegatee`,`t_delegation_p1`.`c_type` AS `c_type` from `t_delegation_p1`;
 
 -- Dumping structure for view bgp_data.v_historical
+DROP VIEW IF EXISTS `v_historical`;
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `v_historical`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_historical` AS select `t_delegation_p1`.`time_stamp` AS `dates`,count(0) AS `total_prefixes`,(select count(`t_delegation_p1`.`c_type`) from `t_delegation_p1` where (`t_delegation_p1`.`c_type` = 0)) AS `c_isolated`,(select count(`t_delegation_p1`.`c_type`) from `t_delegation_p1` where (`t_delegation_p1`.`c_type` = 1)) AS `c_up`,(select count(`t_delegation_p1`.`c_type`) from `t_delegation_p1` where (`t_delegation_p1`.`c_type` = 2)) AS `c_down`,(select count(`t_delegation_p1`.`c_type`) from `t_delegation_p1` where (`t_delegation_p1`.`c_type` = 3)) AS `c_crossed` from `t_delegation_p1` group by `t_delegation_p1`.`time_stamp`;
